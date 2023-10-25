@@ -3,7 +3,8 @@ const router = {
   "/": () => showContent("content-home"),
   "/profile": () =>
     requireAuth(() => showContent("content-profile"), "/profile"),
-  "/login": () => login()
+  "/login": () => login(),
+  "/docome": () => docome()
 };
 
 //Declare helper functions

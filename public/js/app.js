@@ -49,12 +49,14 @@ const fetchAuthConfig = () => fetch("/auth_config.json");
  * Initializes the Auth0 client
  */
 const configureClient = async () => {
-  const response = await fetchAuthConfig();
-  const config = await response.json();
+  // const response = await fetchAuthConfig();
+  // const config = await response.json();
 
   auth0Client = await auth0.createAuth0Client({
-    domain: config.domain,
-    clientId: config.clientId
+    // domain: config.domain,
+    // clientId: config.clientId
+    domain: "dev-n81k8q0skahenxvk.jp.auth0.com",
+    clientId: "3zD1nwkevubQI8sJDSXgBfvEIcs6xavq"
   });
 };
 
@@ -130,3 +132,68 @@ window.onload = async () => {
 
   updateUI();
 };
+
+/**
+ * selmidAPI
+ */
+const selmidAPI = async (select_scope) => {
+  try {
+    console.log("selmidAPI start");
+    console.log("select_scope = " + select_scope);
+
+    console.log("name = " + document.getElementById('name').value);
+    console.log("kana = " + document.getElementById('kana').value);
+    console.log("phoneNumber = " + document.getElementById('phoneNumber').value);
+    console.log("birthday = " + document.getElementById('birthday').value);
+
+    var name_match = document.getElementById('name').value;
+    var name_kana_zenkaku_match = document.getElementById('kana').value;
+    var mobile_phone_match = document.getElementById('phoneNumber').value;
+    var birthdate_match = document.getElementById('birthday').value;
+    
+    var options = {
+      authorizationParams: {
+        redirect_uri: window.location.origin,
+        audience: 'http://localhost:3000',
+        scope: select_scope,
+        name_match: name_match ,
+        name_kana_zenkaku_match: name_kana_zenkaku_match ,
+        mobile_phone_match: mobile_phone_match ,
+        birthdate_match: birthdate_match  
+      }
+    };
+
+    var verifiedToken = await auth0Client.getTokenWithPopup(options);
+    // const verifiedToken = await auth0Client.getTokenSilently(options);
+
+    console.log("verifiedToken = " + verifiedToken);
+
+    var accessToken = decodeJwt(verifiedToken);
+    console.log("accessToken = " + accessToken);
+
+    var doc0= document.getElementById("selmid-result");  
+    doc0.innerHTML= accessToken;   
+
+  } catch (err) {
+    console.log("getTokenWithPopup failed", err);
+  }
+  console.log("selmidAPI end");
+};
+
+const decodeJwt = (token) => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  // return JSON.parse(decodeURIComponent(myescape(window.atob(base64))));
+  return decodeURIComponent(myescape(window.atob(base64)));
+
+};
+const myescape = (str) => {
+  return str.replace(/[^a-zA-Z0-9@*_+\-./]/g, m => {
+      const code = m.charCodeAt(0);
+      if (code <= 0xff) {
+          return '%' + ('00' + code.toString(16)).slice(-2).toUpperCase();
+      } else {
+          return '%u' + ('0000' + code.toString(16)).slice(-4).toUpperCase();
+      }
+  });
+}

@@ -269,6 +269,25 @@
                 <code id="profile-data" class="json"></code></pre>
             </div>
           </div>
+          <br/>
+          <div class="btn-test01">
+            <label for="name">Name       ：<input type="text" id="name" name="name"/></label>
+            <label for="name">Kana       ：<input type="text" id="kana" name="kana"/></label>
+            <label for="name">PhoneNumber：<input type="text" id="phoneNumber" name="phoneNumber"/></label>
+            <label for="name">Birthday   ：<input type="text" id="birthday" name="birthday"/></label>
+          </div>
+          <br/>
+          <table>
+            <tr>
+            <td><button id="btn-docome" onclick="selmidAPI(`selmid-docomo:read`)">docome</button></td>
+            <td><button id="btn-au" onclick="selmidAPI(`selmid-au:read`)">au</button></td>
+            <td><button id="btn-softbank" onclick="selmidAPI(`selmid-softbank:read`)">SoftBank</button></td>
+            </tr>
+          </table>
+          <br/>
+          <div class="selmid">
+            <label id="selmid-result"></label>
+          </div>
         </div>
       </div>
 
