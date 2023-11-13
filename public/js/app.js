@@ -168,6 +168,12 @@ const selmidAPI = async (select_scope) => {
 
     console.log("verifiedToken = " + verifiedToken);
 
+    const claims = await auth0.getIdTokenClaims();
+    // if you need the raw id_token, you can access it
+    // using the __raw property
+    const id_token = claims.__raw;
+    console.log("id_token = " + id_token);
+
     var accessToken = decodeJwt(verifiedToken);
     console.log("accessToken = " + accessToken);
 
