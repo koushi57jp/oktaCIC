@@ -136,16 +136,17 @@ window.onload = async () => {
 /**
  * selmidAPI
  */
-const selmidAPI = async (select_scope) => {
+const selmidAPI = async (select_type) => {
   try {
     console.log("selmidAPI start");
-    console.log("select_scope = " + select_scope);
+    console.log("select_type = " + select_type);
 
     console.log("name = " + document.getElementById('name').value);
     console.log("kana = " + document.getElementById('kana').value);
     console.log("phoneNumber = " + document.getElementById('phoneNumber').value);
     console.log("birthday = " + document.getElementById('birthday').value);
 
+    const selmid_scope = "selmid:read";
     var name_match = document.getElementById('name').value;
     var name_kana_zenkaku_match = document.getElementById('kana').value;
     var mobile_phone_match = document.getElementById('phoneNumber').value;
@@ -155,7 +156,8 @@ const selmidAPI = async (select_scope) => {
       authorizationParams: {
         redirect_uri: window.location.origin,
         audience: 'http://localhost:3000',
-        scope: select_scope,
+        scope: selmid_scope,
+        selectedType: select_type,
         name_match: name_match ,
         name_kana_zenkaku_match: name_kana_zenkaku_match ,
         mobile_phone_match: mobile_phone_match ,
@@ -168,17 +170,18 @@ const selmidAPI = async (select_scope) => {
 
     console.log("verifiedToken = " + verifiedToken);
 
-    const claims = await auth0.getIdTokenClaims();
-    // if you need the raw id_token, you can access it
-    // using the __raw property
-    const id_token = claims.__raw;
-    console.log("id_token = " + id_token);
-
     var accessToken = decodeJwt(verifiedToken);
     console.log("accessToken = " + accessToken);
 
+    var claims = await auth0Client.getIdTokenClaims();
+    const id_token = claims.__raw;
+    console.log("id_token = " + id_token);
+    
+    var id_token_dec = decodeJwt(id_token);
+    console.log("id_token_dec = " + id_token_dec);
+
     var doc0= document.getElementById("selmid-result");  
-    doc0.innerHTML= accessToken;   
+    doc0.innerHTML= id_token_dec;   
 
   } catch (err) {
     console.log("getTokenWithPopup failed", err);
